@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useCallback, ChangeEvent } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import {
   Container,
@@ -10,11 +11,78 @@ import {
   ImagePreview,
 } from './styles';
 
+import { useToast } from '../../hooks/toast';
 import UserSidebar from '../../components/UserSidebar';
 
 import cat from '../../assets/cat.png';
 
 const CreatePost: React.FC = () => {
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const [image, setImage] = useState<File | string>('');
+  const [url, setUrl] = useState('');
+
+  const history = useHistory();
+  const { addToast } = useToast();
+
+  // const handleLoadFile = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files) {
+  //     setImage(e.target.files[0]);
+
+  //     console.log(setImage);
+  //   }
+  // }, []);
+
+  const postDetails = () => {
+    const data = new FormData();
+
+    data.append('file', image);
+    data.append('upload_preset', 'little-lifes');
+    data.append('cloud_name', 'felipebiga');
+
+    fetch('https://api.cloudinary.com/v1_1/felipebiga/image/upload', {
+      method: 'post',
+      body: data,
+      mode: 'no-cors',
+    })
+      .then(res => res.json())
+      .then(dta => {
+        setUrl(dta.url);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    fetch('/createpost', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title,
+        body,
+        pic: url,
+      }),
+    })
+      .then(res => res.json())
+      .then(dta => {
+        if (dta.err) {
+          addToast({
+            type: 'error',
+            title: 'Erro ao criar post',
+            description: 'Ocorreu um erro ao criar postagem',
+          });
+        } else {
+          addToast({
+            type: 'success',
+            title: 'Postado com sucesso',
+          });
+
+          history.push('/dashboard');
+        }
+      });
+  };
+
   return (
     <Container>
       <UserSidebar />
@@ -25,25 +93,35 @@ const CreatePost: React.FC = () => {
             type="text"
             className="title-description"
             placeholder="Título"
+            value={title}
+            onChange={e => setTitle(e.target.value)}
           />
           <input
             type="text"
             className="title-description"
             placeholder="Descrição"
+            value={body}
+            onChange={e => setBody(e.target.value)}
           />
 
           <UploadFile>
             <AddFileButton>
-              <span>Carregar Imagem</span>
-              <input type="file" />
+              <label htmlFor="file">
+                Carregar Imagem
+                <input
+                  type="file"
+                  id="file"
+                  onChange={e => setImage(e.target.files![0])}
+                />
+              </label>
             </AddFileButton>
 
-            <ImagePreview>
-              <img src={cat} alt="" />
-            </ImagePreview>
+            <ImagePreview>{/* <img src={cat} alt="" /> */}</ImagePreview>
           </UploadFile>
 
-          <SubmitFileButton>Realizar postagem</SubmitFileButton>
+          <SubmitFileButton onClick={() => postDetails()}>
+            Realizar postagem
+          </SubmitFileButton>
         </NewPost>
       </Content>
     </Container>

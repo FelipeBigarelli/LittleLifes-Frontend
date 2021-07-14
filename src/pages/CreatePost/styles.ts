@@ -53,7 +53,7 @@ export const UploadFile = styled.div`
 export const AddFileButton = styled.div`
   display: flex;
 
-  span {
+  label {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -89,4 +89,6 @@ export const SubmitFileButton = styled.div`
   border-radius: 16px;
 
   padding: 16px;
+
+  cursor: pointer;
 `;

@@ -9,7 +9,7 @@ import CreatePost from '../pages/CreatePost';
 
 const Routes: React.FC = () => (
   <Switch>
-    <Route path="/" exact component={SignIn} />
+    <Route path="/signin" exact component={SignIn} />
     <Route path="/signup" component={SignUp} />
     <Route path="/dashboard" component={UserDashboard} />
     <Route path="/profile" component={UserProfile} />
