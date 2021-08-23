@@ -73,10 +73,9 @@ export const ProfilePosts = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  height: 70%;
+  /* height: 70%; */
 
   background: rgba(255, 255, 255, 0.8);
-  border-radius: 40px;
 
   & > img {
     padding: 24px 0;

@@ -13,6 +13,8 @@ import {
 
 import myImg from '../../assets/eu.png';
 import postImg from '../../assets/postImg.png';
+import catImg from '../../assets/cat.png';
+import dogImg from '../../assets/dogImg.png';
 
 const UserProfile: React.FC = () => {
   return (
@@ -27,20 +29,17 @@ const UserProfile: React.FC = () => {
             <h2>Felipe Bigarelli</h2>
 
             <Infos>
-              <h4>35 posts</h4>
-              <h4>40 followers</h4>
-              <h4>35 following</h4>
+              <h4>3 posts</h4>
+              <h4>0 followers</h4>
+              <h4>0 following</h4>
             </Infos>
           </ProfileContent>
         </Profile>
 
         <ProfilePosts>
           <img src={postImg} alt="" />
-          <img src={postImg} alt="" />
-          <img src={postImg} alt="" />
-          <img src={postImg} alt="" />
-          <img src={postImg} alt="" />
-          <img src={postImg} alt="" />
+          <img src={catImg} alt="" />
+          <img src={dogImg} alt="" />
         </ProfilePosts>
       </Content>
     </Container>

@@ -29,37 +29,43 @@ const SignUp: React.FC = () => {
         email,
       )
     ) {
-      console.log('Erro no email');
-    }
-    fetch('/signup', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name,
-        password,
-        email,
-      }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.err) {
-          addToast({
-            type: 'error',
-            title: 'Erro no cadastro',
-            description:
-              'Ocorreu um erro ao cadastrar usuário, cheque as credenciais',
-          });
-        } else {
-          addToast({
-            type: 'success',
-            title: 'Usuário cadastrado com sucesso',
-          });
-
-          history.push('/signin');
-        }
+      addToast({
+        type: 'error',
+        title: 'Erro no cadastro',
+        description:
+          'Ocorreu um erro ao cadastrar usuário, cheque as credenciais',
       });
+    } else {
+      fetch('/signup', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          password,
+          email,
+        }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.err) {
+            addToast({
+              type: 'error',
+              title: 'Erro no cadastro',
+              description:
+                'Ocorreu um erro ao cadastrar usuário, cheque as credenciais',
+            });
+          } else {
+            addToast({
+              type: 'success',
+              title: 'Usuário cadastrado com sucesso',
+            });
+
+            history.push('/signin');
+          }
+        });
+    }
   };
 
   const formRef = useRef<FormHandles>(null);

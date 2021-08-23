@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback, useState, useContext } from 'react';
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Link, useHistory } from 'react-router-dom';
@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 
 import { useToast } from '../../hooks/toast';
 import getValidationErrors from '../../utils/getValidationErrors';
+import { UserContext } from '../../App';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -16,6 +17,7 @@ import dogEar from '../../assets/dogEar.png';
 import { Container, Content, Background } from './styles';
 
 const SignIn: React.FC = () => {
+  const { state, dispatch } = useContext(UserContext);
   const history = useHistory();
   const { addToast } = useToast();
 
@@ -27,6 +29,7 @@ const SignIn: React.FC = () => {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('jwt')}`,
       },
       body: JSON.stringify({
         password,
@@ -45,6 +48,11 @@ const SignIn: React.FC = () => {
               'Ocorreu um erro ao fazer login, cheque as credenciais',
           });
         } else {
+          localStorage.setItem('jwt', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+
+          dispatch({ type: 'USER', payload: data.user });
+
           addToast({
             type: 'success',
             title: 'Logado com sucesso',

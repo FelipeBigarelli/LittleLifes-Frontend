@@ -28,7 +28,7 @@ export const NewPost = styled.div`
     width: 50%;
 
     padding: 4px;
-    margin-bottom: 16px;
+    margin-bottom: 32px;
     font-size: 16px;
 
     background: none;
@@ -41,7 +41,7 @@ export const NewPost = styled.div`
 export const UploadFile = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
 
   /* padding-top: 16px; */

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, ChangeEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -25,13 +25,42 @@ const CreatePost: React.FC = () => {
   const history = useHistory();
   const { addToast } = useToast();
 
-  // const handleLoadFile = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files) {
-  //     setImage(e.target.files[0]);
+  useEffect(() => {
+    if (url) {
+      fetch('/createpost', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        },
+        body: JSON.stringify({
+          title,
+          body,
+          photo: url,
+        }),
+      })
+        .then(res => res.json())
+        .then(dta => {
+          if (dta.err) {
+            addToast({
+              type: 'error',
+              title: 'Erro ao criar post',
+              description: 'Ocorreu um erro ao criar postagem',
+            });
+          } else {
+            addToast({
+              type: 'success',
+              title: 'Postado com sucesso',
+            });
 
-  //     console.log(setImage);
-  //   }
-  // }, []);
+            history.push('/dashboard');
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }, [url, addToast, body, title, history]);
 
   const postDetails = () => {
     const data = new FormData();
@@ -43,7 +72,6 @@ const CreatePost: React.FC = () => {
     fetch('https://api.cloudinary.com/v1_1/felipebiga/image/upload', {
       method: 'post',
       body: data,
-      mode: 'no-cors',
     })
       .then(res => res.json())
       .then(dta => {
@@ -51,35 +79,6 @@ const CreatePost: React.FC = () => {
       })
       .catch(err => {
         console.log(err);
-      });
-
-    fetch('/createpost', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        body,
-        pic: url,
-      }),
-    })
-      .then(res => res.json())
-      .then(dta => {
-        if (dta.err) {
-          addToast({
-            type: 'error',
-            title: 'Erro ao criar post',
-            description: 'Ocorreu um erro ao criar postagem',
-          });
-        } else {
-          addToast({
-            type: 'success',
-            title: 'Postado com sucesso',
-          });
-
-          history.push('/dashboard');
-        }
       });
   };
 
@@ -116,7 +115,9 @@ const CreatePost: React.FC = () => {
               </label>
             </AddFileButton>
 
-            <ImagePreview>{/* <img src={cat} alt="" /> */}</ImagePreview>
+            {/* <ImagePreview>
+              <img src={cat} alt="" />
+            </ImagePreview> */}
           </UploadFile>
 
           <SubmitFileButton onClick={() => postDetails()}>

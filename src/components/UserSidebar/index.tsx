@@ -32,7 +32,7 @@ const UserSidebar: React.FC = () => {
           Meus posts
         </Link>
 
-        <Link to="/create-post">
+        <Link to="/createpost">
           <BsImage size={16} />
           Novo post
         </Link>
